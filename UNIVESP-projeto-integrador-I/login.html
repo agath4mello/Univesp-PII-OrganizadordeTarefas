@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Organizador de Tarefas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Login</h1>
+    <form id="login-form">
+        <label for="username">Usuário:</label>
+        <input type="text" id="username" name="username">
+
+        <label for="password">Senha:</label>
+        <input type="password" id="password" name="password"><br>
+
+        <button type="submit">Entrar</button><br>
+    </form>
+    <div id="message" style="display: none;"></div>
+    <a href="cadastro.html" class="btn-back">Criar conta</a>
+    <a href="index.html" class="btn-back">Voltar</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.getElementById('login-form');
+        const messageDiv = document.getElementById('message');
+
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Recuperar os dados de cadastro do localStorage
+            const storedUsername = localStorage.getItem('username');
+            const storedPassword = localStorage.getItem('password');
+
+            // Verificar os dados de login
+            if (username === storedUsername && password === storedPassword) {
+                // Mostrar mensagem de login bem sucedido
+                messageDiv.innerText = 'Login bem sucedido! Redirecionando...';
+                messageDiv.style.display = 'block';
+
+                // Armazenar o estado de login
+                localStorage.setItem('isLoggedIn', true);
+
+                // Redirecionar para a tela principal depois de 5 segundos
+                setTimeout(function() {
+                    window.location.href = 'telaPrincipal.html';
+                }, 2000);
+            } else {
+                alert('Usuário ou senha incorretos. Tente novamente.');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

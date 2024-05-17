@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato - Organizador de Tarefas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Contato</h1>
+    <p>Entre em contato conosco se tiver alguma dúvida ou sugestão:</p>
+    <form id="contact-form">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name">
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email">
+
+        <label for="message">Mensagem:</label>
+        <textarea id="message" name="message" rows="4"></textarea><br>
+
+        <button type="submit">Enviar Mensagem</button><br>
+    </form>
+    <div id="confirmation" style="display: none;">
+        <p>Tem certeza que deseja enviar a mensagem?</p>
+        <button id="confirm-yes">Sim</button>
+        <button id="confirm-no">Não</button>
+    </div>
+    <div id="success-message" style="display: none;">Mensagem enviada com sucesso! Os dados foram encaminhados para a equipe responsável.</div>
+    <a href="index.html" class="btn-back">Voltar</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const contactForm = document.getElementById('contact-form');
+        const confirmationDiv = document.getElementById('confirmation');
+        const successMessageDiv = document.getElementById('success-message');
+
+        contactForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            confirmationDiv.style.display = 'block';
+        });
+
+        document.getElementById('confirm-yes').addEventListener('click', function() {
+            // Enviar a mensagem (simulado)
+            alert('Mensagem enviada com sucesso! Os dados foram encaminhados para a equipe responsável.');
+
+            // Limpar os campos
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('message').value = '';
+
+            // Esconder mensagem de confirmação e exibir mensagem de sucesso
+            confirmationDiv.style.display = 'none';
+            successMessageDiv.style.display = 'block';
+
+            // Redirecionar para a tela de contato após 5 segundos
+            setTimeout(function() {
+                successMessageDiv.style.display = 'none';
+            }, 5000);
+        });
+
+        document.getElementById('confirm-no').addEventListener('click', function() {
+            confirmationDiv.style.display = 'none';
+        });
+    });
+</script>
+
+</body>
+</html>

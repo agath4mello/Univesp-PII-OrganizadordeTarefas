@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Organizador de Tarefas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Cadastro</h1>
+    <form id="signup-form">
+        <label for="username">Nome:</label>
+        <input type="text" id="username" name="username">
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email">
+
+        <label for="password">Senha:</label>
+        <input type="password" id="password" name="password"><br>
+
+        <button type="submit">Cadastrar</button><br>
+    </form>
+    <div id="message" style="display: none;"></div>
+    <a href="login.html" class="btn-back">Login</a>
+    <a href="index.html" class="btn-back">Voltar</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const signupForm = document.getElementById('signup-form');
+        const messageDiv = document.getElementById('message');
+
+        signupForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Armazenar os dados de cadastro
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password);
+
+            // Exibir mensagem de cadastro bem-sucedido
+            messageDiv.innerText = 'Cadastro bem-sucedido! Os dados de acesso serão enviados para o email cadastrado.';
+            messageDiv.style.display = 'block';
+
+            // Redirecionar para a próxima página depois de 5 segundos
+            setTimeout(function() {
+                window.location.href = 'login.html';
+            }, 5000);
+
+            // Simular envio de email (não funcional, apenas exemplo)
+            setTimeout(function() {
+                // Aqui você poderia enviar um email, mas isso não é possível com JavaScript puro
+                // Você pode exibir um alerta para simular o envio do email
+                alert('Email enviado para: ' + email + '\nDados de acesso:\nNome de usuário: ' + username + '\nSenha: ' + password);
+            }, 3000); // Simula o envio do email depois de 3 segundos
+        });
+    });
+</script>
+
+</body>
+</html>

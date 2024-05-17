@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizador de Tarefas</title>
+    <link rel="stylesheet" href="telaPrincipal.css">
+</head>
+<body>
+<div class="container-org">
+    <h1>Organizador de Tarefas</h1>
+    <form id="task-form">
+        <label for="subject">Matérias Cursadas:</label>
+        <input type="text" id="subject" name="subject" placeholder="Ex: Matemática, Física, Química"><br>
+
+        <label for="weights">Pesos das Matérias:</label>
+        <input type="text" id="weights" name="weights" placeholder="Ex: 3, 2, 1"><br>
+
+        <label for="hours">Horário Disponível de Estudo (horas):</label>
+        <input type="number" id="hours" name="hours" min="1" placeholder="Ex: 4"><br>
+
+        <label for="difficulty">Matéria com Mais Dificuldade na Semana:</label>
+        <input type="text" id="difficulty" name="difficulty" placeholder="Ex: Física"><br>
+
+        <button type="submit">Organizar Tarefas</button>
+    </form>
+
+    <div id="output" class="hidden">
+        <h2>Resultado:</h2>
+        <table id="task-table">
+            <tr>
+                <th>Matérias Cursadas</th>
+                <th>Pesos das Matérias</th>
+                <th>Horas Disponíveis de Estudo</th>
+                <th>Matéria com Mais Dificuldade</th>
+            </tr>
+        </table>
+
+        <h2>Cronograma de Estudos</h2>
+        <table id="study-schedule">
+            <tr>
+                <th>Dia da Semana</th>
+                <th>Horas de Estudo</th>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+    function distributeStudyHours(hours) {
+        const daysOfWeek = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira'];
+        const hoursPerDay = Math.floor(hours / 5); // Dividir igualmente entre os dias úteis
+        const remainingHours = hours % 5; // Horas restantes
+
+        const studySchedule = [];
+        for (let i = 0; i < 5; i++) {
+            studySchedule.push({ day: daysOfWeek[i], hours: hoursPerDay });
+        }
+
+        // Distribuir as horas restantes
+        for (let i = 0; i < remainingHours; i++) {
+            studySchedule[i].hours++;
+        }
+
+        return studySchedule;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Verificar se o usuário está logado
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+        if (!isLoggedIn) {
+            // Se não estiver logado, redirecionar para a tela de login
+            window.location.href = 'login.html';
+        }
+
+        const taskForm = document.getElementById('task-form');
+        const outputDiv = document.getElementById('output');
+        const taskTable = document.getElementById('task-table');
+        const studySchedule = document.getElementById('study-schedule');
+
+        taskForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Obter os dados do formulário
+            const subject = document.getElementById('subject').value;
+            const weights = document.getElementById('weights').value;
+            const hours = parseInt(document.getElementById('hours').value, 10);
+            const difficulty = document.getElementById('difficulty').value;
+
+            // Criar nova linha na tabela de tarefas
+            const taskRow = taskTable.insertRow(-1);
+            taskRow.innerHTML = `
+                <td>${subject}</td>
+                <td>${weights}</td>
+                <td>${hours}</td>
+                <td>${difficulty}</td>
+            `;
+
+            // Calcular o cronograma de estudos
+            const totalWeight = weights.split(',').reduce((acc, curr) => parseInt(acc) + parseInt(curr), 0);
+            const studyHours = weights.split(',').map(weight => {
+                const weightValue = parseInt(weight);
+                if (difficulty === subject.split(',')[weights.split(',').indexOf(weight)]) {
+                    return Math.round(weightValue / totalWeight * hours * 1.5);
+                }
+                return Math.round(weightValue / totalWeight * hours);
+            });
+
+            // Limpar a tabela de cronograma de estudos
+            studySchedule.innerHTML = `
+                <tr>
+                    <th>Dia da Semana</th>
+                    <th>Horas de Estudo</th>
+                </tr>
+            `;
+
+            // Distribuir as horas de estudo ao longo dos dias da semana
+            const studyScheduleData = distributeStudyHours(hours);
+            // Adicionar linhas à tabela de cronograma de estudos
+            studyScheduleData.forEach(day => {
+                const studyRow = studySchedule.insertRow(-1);
+                studyRow.innerHTML = `
+                    <td>${day.day}</td>
+                    <td>${day.hours} horas</td>
+                `;
+            });
+
+            // Mostrar os dados na saída
+            outputDiv.classList.remove('hidden');
+        });
+    });
+</script>
+</body>
+</html>
